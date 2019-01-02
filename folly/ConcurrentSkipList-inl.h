@@ -27,7 +27,6 @@
 #include <type_traits>
 #include <vector>
 
-#include <boost/noncopyable.hpp>
 #include <boost/random.hpp>
 #include <boost/type_traits.hpp>
 #include <glog/logging.h>
@@ -43,7 +42,7 @@ template <typename ValT, typename NodeT>
 class csl_iterator;
 
 template <typename T>
-class SkipListNode : private boost::noncopyable {
+class SkipListNode {
   enum : uint16_t {
     IS_HEAD_NODE = 1,
     MARKED_FOR_REMOVAL = (1 << 1),
@@ -164,6 +163,9 @@ class SkipListNode : private boost::noncopyable {
       new (&skip_[i]) std::atomic<SkipListNode*>(nullptr);
     }
   }
+
+  SkipListNode(const SkipListNode&) = delete;
+  SkipListNode& operator=(const SkipListNode&) = delete;
 
   ~SkipListNode() {
     for (uint8_t i = 0; i < height_; ++i) {

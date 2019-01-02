@@ -23,8 +23,6 @@
 #include <limits>
 #include <type_traits>
 
-#include <boost/noncopyable.hpp>
-
 #include <folly/Traits.h>
 #include <folly/concurrency/CacheLocality.h>
 #include <folly/detail/TurnSequencer.h>
@@ -640,7 +638,7 @@ template <
     typename T,
     template <typename> class Atom,
     bool Dynamic>
-class MPMCQueueBase<Derived<T, Atom, Dynamic>> : boost::noncopyable {
+class MPMCQueueBase<Derived<T, Atom, Dynamic>> {
   // Note: Using CRTP static casts in several functions of this base
   // template instead of making called functions virtual or duplicating
   // the code of calling functions in the derived partially specialized
@@ -720,6 +718,9 @@ class MPMCQueueBase<Derived<T, Atom, Dynamic>> : boost::noncopyable {
     rhs.pushSpinCutoff_.store(0, std::memory_order_relaxed);
     rhs.popSpinCutoff_.store(0, std::memory_order_relaxed);
   }
+
+  MPMCQueueBase(const MPMCQueueBase&) = delete;
+  MPMCQueueBase& operator=(const MPMCQueueBase&) = delete;
 
   /// IMPORTANT: The move operator is here to make it easier to perform
   /// the initialization phase, it is not safe to use when there are any
