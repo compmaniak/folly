@@ -20,9 +20,8 @@
 
 #include <type_traits>
 
-#include <boost/iterator/iterator_facade.hpp>
-
 #include <folly/detail/AtomicHashUtils.h>
+#include <folly/detail/Iterators.h>
 #include <folly/lang/Bits.h>
 
 namespace folly {
@@ -482,10 +481,10 @@ struct AtomicHashArray<
     Allocator,
     ProbeFcn,
     KeyConvertFcn>::aha_iterator
-    : boost::iterator_facade<
+    : detail::IteratorFacade<
           aha_iterator<ContT, IterVal>,
           IterVal,
-          boost::forward_traversal_tag> {
+          std::forward_iterator_tag> {
   explicit aha_iterator() : aha_(nullptr) {}
 
   // Conversion ctor for interoperability between const_iterator and
@@ -516,7 +515,10 @@ struct AtomicHashArray<
 
  private:
   friend class AtomicHashArray;
-  friend class boost::iterator_core_access;
+  friend class detail::IteratorFacade<
+    aha_iterator<ContT, IterVal>,
+    IterVal,
+    std::forward_iterator_tag>;
 
   void increment() {
     ++offset_;

@@ -19,6 +19,7 @@
 #endif
 
 #include <folly/detail/AtomicHashUtils.h>
+#include <folly/detail/Iterators.h>
 
 namespace folly {
 
@@ -566,10 +567,10 @@ struct AtomicHashMap<
     Allocator,
     ProbeFcn,
     KeyConvertFcn>::ahm_iterator
-    : boost::iterator_facade<
+    : detail::IteratorFacade<
           ahm_iterator<ContT, IterVal, SubIt>,
           IterVal,
-          boost::forward_traversal_tag> {
+          std::forward_iterator_tag> {
   explicit ahm_iterator() : ahm_(nullptr) {}
 
   // Conversion ctor for interoperability between const_iterator and
@@ -596,7 +597,10 @@ struct AtomicHashMap<
   explicit ahm_iterator(ContT* ahm, uint32_t subMap, const SubIt& subIt)
       : ahm_(ahm), subMap_(subMap), subIt_(subIt) {}
 
-  friend class boost::iterator_core_access;
+  friend class detail::IteratorFacade<
+    ahm_iterator<ContT, IterVal, SubIt>,
+    IterVal,
+    std::forward_iterator_tag>;
 
   void increment() {
     CHECK(!isEnd());
