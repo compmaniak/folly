@@ -24,7 +24,6 @@
  */
 #pragma once
 
-#include <boost/function_types/is_member_pointer.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/pop_front.hpp>
@@ -48,9 +47,7 @@ class IdentifyCallable {
 
  private:
   template <typename Fn>
-  using IsMemFn =
-      typename boost::function_types::template is_member_pointer<decltype(
-          &Fn::operator())>;
+  using IsMemFn = std::is_member_function_pointer<decltype(&Fn::operator())>;
   template <typename Fn>
   constexpr static typename std::enable_if<IsMemFn<Fn>::value, Kind>::type test(
       IsMemFn<Fn>*) {

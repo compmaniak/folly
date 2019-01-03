@@ -20,6 +20,8 @@
 
 #include <type_traits>
 
+#include <boost/iterator/iterator_facade.hpp>
+
 #include <folly/detail/AtomicHashUtils.h>
 #include <folly/lang/Bits.h>
 

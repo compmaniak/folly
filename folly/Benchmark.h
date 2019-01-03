@@ -30,7 +30,6 @@
 #include <type_traits>
 #include <unordered_map>
 
-#include <boost/function_types/function_arity.hpp>
 #include <glog/logging.h>
 
 DECLARE_bool(benchmark);
